@@ -3,6 +3,7 @@ package com.example.bt_androidsenddata;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
         beURL.setText(sharedPreferences.getString("beURL", ""));
         beURL.setThreshold(0);
         urls = new ArrayList<>(Arrays.asList(sharedPreferences.getString("urls", "").split(URLS_DELIMITER)));
-        if (urls.isEmpty()) {
+        if (urls.size() == 1 && urls.get(0).equals("")) {
+            urls.remove(0);
             urls.add("https://httpbin.org/anything");
         }
         adapterURLs = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, urls);
