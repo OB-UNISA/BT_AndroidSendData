@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/beURL"
         android:layout_centerInParent="true"
+        android:longClickable="true"
         android:onClick="sendData"
         android:text="Send Data" />
 
@@ -47,6 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:scrollbars="vertical"
                 android:text="Data to send"
                 android:textSize="15sp"
@@ -71,6 +73,7 @@
                 android:id="@+id/dataReceivedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:text="Data Received"
                 android:textSize="15sp"
                 android:textStyle="bold" />
