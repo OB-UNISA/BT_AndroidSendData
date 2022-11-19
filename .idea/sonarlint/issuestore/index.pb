@@ -3,9 +3,6 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
-:
-
-.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 7
@@ -18,7 +15,11 @@ X
 app/.gitignore,5\1\51e1c5d383dfaa35e0e7e5873a0a99355a86880f
 F
 app/proguard-rules.pro,9\e\9e08934d811afe28fbc77aaa3c0d747b94348db9
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 „
-Tapp/src/androidTest/java/com/example/bt_androidsenddata/ExampleInstrumentedTest.java,9\5\95c6f51e266c5778ce0f1e5522191d008efb6731
+Tapp/src/androidTest/java/com/bilovus/bt_androidsenddata/ExampleInstrumentedTest.java,8\8\886f416b2c5ba97fc6d72a064a3a0bbcb38146eb
 u
-Eapp/src/test/java/com/example/bt_androidsenddata/ExampleUnitTest.java,5\0\502aa264db22bba8e9be9dc0d2078c371cccb271
+Eapp/src/test/java/com/bilovus/bt_androidsenddata/ExampleUnitTest.java,6\5\6546b3564ae1fe3513088dadb79652d8bab60339

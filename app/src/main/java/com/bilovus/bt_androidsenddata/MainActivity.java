@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendData(View view) {
-        String url = beURL.getText().toString();
+        String url = beURL.getText().toString().trim();
         if (!url.isEmpty()) {
             dataReceived.setText("Sending data...");
             JSONObject data = new JSONObject();
