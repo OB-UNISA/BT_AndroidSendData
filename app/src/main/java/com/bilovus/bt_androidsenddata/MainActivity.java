@@ -9,12 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText dataToSend;
     private AutoCompleteTextView beURL;
     private CheckBox defaultDataCheck;
+    private Spinner httpMethod;
     private String defaultData;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -83,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        httpMethod = findViewById(R.id.httpMethod);
+        httpMethod.setSelection(sharedPreferences.getInt("httpMethod", 1));
+
+
     }
 
     @Override
@@ -96,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
             adapterURLs.notifyDataSetChanged();
             editor.putString("urls", String.join(URLS_DELIMITER, urls));
             editor.apply();
+
+            String urlSelected = data.getStringExtra("urlSelected");
+            if (urlSelected != null) {
+                beURL.setText(urlSelected);
+            }
         }
     }
 
@@ -110,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendData(View view) {
         String url = beURL.getText().toString().trim();
+        int requestMethod = httpMethod.getSelectedItemPosition();
         if (!url.isEmpty()) {
             dataReceived.setText("Sending data...");
             JSONObject data = new JSONObject();
@@ -122,14 +133,18 @@ public class MainActivity extends AppCompatActivity {
             if (index == -1) {
                 urls.add(0, url);
                 editor.putString("urls", String.join(URLS_DELIMITER, urls));
-                editor.apply();
             } else {
                 urls.remove(index);
                 urls.add(0, url);
             }
             adapterURLs.notifyDataSetChanged();
+            editor.putInt("httpMethod", requestMethod);
+            editor.apply();
 
-            StringRequest req = new StringRequest(Request.Method.POST, url, response -> dataReceived.setText(response), error -> dataReceived.setText(error.toString())) {
+
+            StringRequest req = new StringRequest(requestMethod, url, response -> dataReceived.setText(response), error -> {
+                dataReceived.setText(error.toString() + "\n" + new String(error.networkResponse.data));
+            }) {
                 @Override
                 public byte[] getBody() {
                     return data.toString().getBytes();

@@ -29,7 +29,7 @@ public class ListURLActivity extends AppCompatActivity {
         clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
         ListView listView = findViewById(R.id.listURLs);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("What do you want to do with this URL?");
             builder.setMessage(urls.get(position));
@@ -46,6 +46,13 @@ public class ListURLActivity extends AppCompatActivity {
                 Toast.makeText(this, "URL copied", Toast.LENGTH_SHORT).show();
             });
             builder.show();
+            return false;
+        });
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            intent.putExtra("urlSelected", urls.get(position));
+            done();
+            finish();
         });
 
         intent = getIntent();
