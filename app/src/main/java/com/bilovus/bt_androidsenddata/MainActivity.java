@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             StringRequest req = new StringRequest(requestMethod, url, response -> dataReceived.setText(response), error -> {
-                dataReceived.setText(error.toString() + "\n" + new String(error.networkResponse.data));
+                dataReceived.setText(error.toString());
             }) {
                 @Override
                 public byte[] getBody() {
