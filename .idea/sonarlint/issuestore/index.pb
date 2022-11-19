@@ -17,8 +17,6 @@ F
 app/proguard-rules.pro,9\e\9e08934d811afe28fbc77aaa3c0d747b94348db9
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 „
 Tapp/src/androidTest/java/com/bilovus/bt_androidsenddata/ExampleInstrumentedTest.java,8\8\886f416b2c5ba97fc6d72a064a3a0bbcb38146eb
 u
