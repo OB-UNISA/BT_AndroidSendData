@@ -12,149 +12,152 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView dataReceived;
-    private EditText dataToSend;
-    private AutoCompleteTextView beURL;
-    private CheckBox defaultDataCheck;
-    private Spinner httpMethod;
-    private String defaultData;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private ArrayAdapter<String> adapterURLs;
-    private ArrayList<String> urls;
-    private final String URLS_DELIMITER = "§";
+  private TextView dataReceived;
+  private EditText dataToSend;
+  private AutoCompleteTextView beURL;
+  private CheckBox defaultDataCheck;
+  private Spinner httpMethod;
+  private String defaultData;
+  private SharedPreferences sharedPreferences;
+  private SharedPreferences.Editor editor;
+  private ArrayAdapter<String> adapterURLs;
+  private ArrayList<String> urls;
+  private final String URLS_DELIMITER = "§";
 
-    private RequestQueue queue;
+  private RequestQueue queue;
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    queue = Volley.newRequestQueue(this);
 
-        queue = Volley.newRequestQueue(this);
+    dataReceived = findViewById(R.id.dataReceived);
+    dataReceived.setMovementMethod(new ScrollingMovementMethod());
 
-        dataReceived = findViewById(R.id.dataReceived);
-        dataReceived.setMovementMethod(new ScrollingMovementMethod());
+    dataToSend = findViewById(R.id.dataToSend);
+    beURL = findViewById(R.id.beURL);
 
-        dataToSend = findViewById(R.id.dataToSend);
-        beURL = findViewById(R.id.beURL);
-
-        defaultDataCheck = findViewById(R.id.defaultDataCheck);
-        try (InputStream f = getResources().openRawResource(getResources().getIdentifier("default_data", "raw", getPackageName()))) {
-            defaultData = IOUtils.toString(f, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        beURL.setText(sharedPreferences.getString("beURL", ""));
-        beURL.setThreshold(0);
-        urls = new ArrayList<>(Arrays.asList(sharedPreferences.getString("urls", "").split(URLS_DELIMITER)));
-        if (urls.size() == 1 && urls.get(0).equals("")) {
-            urls.remove(0);
-            urls.add("https://httpbin.org/anything");
-        }
-        adapterURLs = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, urls);
-        beURL.setAdapter(adapterURLs);
-
-        findViewById(R.id.sendData).setOnLongClickListener(v -> {
-            Intent intent = new Intent(this, ListURLActivity.class);
-            intent.putExtra("urls", urls);
-            startActivityForResult(intent, 1);
-
-            return true;
-        });
-
-        httpMethod = findViewById(R.id.httpMethod);
-        httpMethod.setSelection(sharedPreferences.getInt("httpMethod", 1));
-
-
+    defaultDataCheck = findViewById(R.id.defaultDataCheck);
+    try (InputStream f =
+        getResources()
+            .openRawResource(
+                getResources().getIdentifier("default_data", "raw", getPackageName()))) {
+      defaultData = IOUtils.toString(f, StandardCharsets.UTF_8);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    @Override
-    @Deprecated
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            urls = data.getStringArrayListExtra("urls");
-            adapterURLs.clear();
-            adapterURLs.addAll(urls);
-            adapterURLs.notifyDataSetChanged();
-            editor.putString("urls", String.join(URLS_DELIMITER, urls));
-            editor.apply();
-
-            String urlSelected = data.getStringExtra("urlSelected");
-            if (urlSelected != null) {
-                beURL.setText(urlSelected);
-            }
-        }
+    sharedPreferences = getPreferences(MODE_PRIVATE);
+    editor = sharedPreferences.edit();
+    beURL.setText(sharedPreferences.getString("beURL", ""));
+    beURL.setThreshold(0);
+    urls =
+        new ArrayList<>(
+            Arrays.asList(sharedPreferences.getString("urls", "").split(URLS_DELIMITER)));
+    if (urls.size() == 1 && urls.get(0).equals("")) {
+      urls.remove(0);
+      urls.add("https://httpbin.org/anything");
     }
+    adapterURLs = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, urls);
+    beURL.setAdapter(adapterURLs);
 
-    public void defaultDataCheck(View view) {
-        if (defaultDataCheck.isChecked()) {
-            dataToSend.setText(defaultData);
+    findViewById(R.id.sendData)
+        .setOnLongClickListener(
+            v -> {
+              Intent intent = new Intent(this, ListURLActivity.class);
+              intent.putExtra("urls", urls);
+              startActivityForResult(intent, 1);
 
-        } else {
-            dataToSend.setText("");
-        }
+              return true;
+            });
+
+    httpMethod = findViewById(R.id.httpMethod);
+    httpMethod.setSelection(sharedPreferences.getInt("httpMethod", 1));
+  }
+
+  @Override
+  @Deprecated
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 1) {
+      urls = data.getStringArrayListExtra("urls");
+      adapterURLs.clear();
+      adapterURLs.addAll(urls);
+      adapterURLs.notifyDataSetChanged();
+      editor.putString("urls", String.join(URLS_DELIMITER, urls));
+      editor.apply();
+
+      String urlSelected = data.getStringExtra("urlSelected");
+      if (urlSelected != null) {
+        beURL.setText(urlSelected);
+      }
     }
+  }
 
-    public void sendData(View view) {
-        String url = beURL.getText().toString().trim();
-        int requestMethod = httpMethod.getSelectedItemPosition();
-        if (!url.isEmpty()) {
-            dataReceived.setText("Sending data...");
-            JSONObject data = new JSONObject();
-            try {
-                data.put("data", dataToSend.getText().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int index = urls.indexOf(url);
-            if (index == -1) {
-                urls.add(0, url);
-                editor.putString("urls", String.join(URLS_DELIMITER, urls));
-            } else {
-                urls.remove(index);
-                urls.add(0, url);
-            }
-            adapterURLs.notifyDataSetChanged();
-            editor.putInt("httpMethod", requestMethod);
-            editor.apply();
+  public void defaultDataCheck(View view) {
+    if (defaultDataCheck.isChecked()) {
+      dataToSend.setText(defaultData);
 
+    } else {
+      dataToSend.setText("");
+    }
+  }
 
-            StringRequest req = new StringRequest(requestMethod, url, response -> dataReceived.setText(response), error -> {
+  public void sendData(View view) {
+    String url = beURL.getText().toString().trim();
+    int requestMethod = httpMethod.getSelectedItemPosition();
+    if (!url.isEmpty()) {
+      dataReceived.setText("Sending data...");
+      JSONObject data = new JSONObject();
+      try {
+        data.put("data", dataToSend.getText().toString());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      int index = urls.indexOf(url);
+      if (index == -1) {
+        urls.add(0, url);
+        editor.putString("urls", String.join(URLS_DELIMITER, urls));
+      } else {
+        urls.remove(index);
+        urls.add(0, url);
+      }
+      adapterURLs.notifyDataSetChanged();
+      editor.putInt("httpMethod", requestMethod);
+      editor.apply();
+
+      StringRequest req =
+          new StringRequest(
+              requestMethod,
+              url,
+              response -> dataReceived.setText(response),
+              error -> {
                 dataReceived.setText(error.toString());
-            }) {
-                @Override
-                public byte[] getBody() {
-                    return data.toString().getBytes();
-                }
-            };
+              }) {
+            @Override
+            public byte[] getBody() {
+              return data.toString().getBytes();
+            }
+          };
 
-            queue.add(req);
-        } else {
-            Toast.makeText(this, "URL is empty", Toast.LENGTH_SHORT).show();
-        }
-
+      queue.add(req);
+    } else {
+      Toast.makeText(this, "URL is empty", Toast.LENGTH_SHORT).show();
     }
+  }
 }
